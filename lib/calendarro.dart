@@ -50,14 +50,14 @@ class Calendarro extends StatefulWidget {
     this.weekdayLabelsRow,
   }) : super(key: key) {
     if (startDate == null) {
-      startDate = DateUtils.getFirstDayOfCurrentMonth();
+      startDate = CalendarroDateUtils.getFirstDayOfCurrentMonth();
     }
-    startDate = DateUtils.toMidnight(startDate);
+    startDate = CalendarroDateUtils.toMidnight(startDate);
 
     if (endDate == null) {
-      endDate = DateUtils.getLastDayOfCurrentMonth();
+      endDate = CalendarroDateUtils.getLastDayOfCurrentMonth();
     }
-    endDate = DateUtils.toMidnight(endDate);
+    endDate = CalendarroDateUtils.toMidnight(endDate);
 
     if (startDate.isAfter(endDate)) {
       throw new ArgumentError("Calendarro: startDate is after the endDate");
@@ -103,7 +103,7 @@ class Calendarro extends StatefulWidget {
   int getPositionOfDate(DateTime date) {
     int daysDifference =
         date
-            .difference(DateUtils.toMidnight(startDate))
+            .difference(CalendarroDateUtils.toMidnight(startDate))
             .inDays;
     int weekendsDifference = ((daysDifference + startDate.weekday) / 7).toInt();
     var position = daysDifference - weekendsDifference * 2;
@@ -175,7 +175,7 @@ class CalendarroState extends State<Calendarro> {
       int lastPage = widget.getPageForDate(widget.endDate);
       pagesCount = lastPage + 1;
     } else {
-      pagesCount = DateUtils.calculateMonthsDifference(
+      pagesCount = CalendarroDateUtils.calculateMonthsDifference(
           widget.startDate,
           widget.endDate) + 1;
     }
@@ -198,7 +198,7 @@ class CalendarroState extends State<Calendarro> {
     if (widget.displayMode == DisplayMode.WEEKS) {
       widgetHeight = widget.dayLabelHeight + widget.dayTileHeight;
     } else {
-      var maxWeeksNumber = DateUtils.calculateMaxWeeksNumberMonthly(
+      var maxWeeksNumber = CalendarroDateUtils.calculateMaxWeeksNumberMonthly(
           widget.startDate,
           widget.endDate);
       widgetHeight = widget.dayLabelHeight
@@ -213,11 +213,11 @@ class CalendarroState extends State<Calendarro> {
   bool isDateSelected(DateTime date) {
     switch (widget.selectionMode) {
       case SelectionMode.SINGLE:
-        return DateUtils.isSameDay(selectedSingleDate, date);
+        return CalendarroDateUtils.isSameDay(selectedSingleDate, date);
         break;
       case SelectionMode.MULTI:
         final matchedSelectedDate = selectedDates.firstWhere((currentDate) =>
-            DateUtils.isSameDay(currentDate, date),
+            CalendarroDateUtils.isSameDay(currentDate, date),
             orElse: () => null
         );
 
@@ -228,12 +228,12 @@ class CalendarroState extends State<Calendarro> {
           case 0:
             return false;
           case 1:
-            return DateUtils.isSameDay(selectedDates[0], date);
+            return CalendarroDateUtils.isSameDay(selectedDates[0], date);
           default:
             var dateBetweenDatesRange = (date.isAfter(selectedDates[0])
                 && date.isBefore(selectedDates[1]));
-            return DateUtils.isSameDay(date, selectedDates[0])
-              || DateUtils.isSameDay(date, selectedDates[1])
+            return CalendarroDateUtils.isSameDay(date, selectedDates[0])
+              || CalendarroDateUtils.isSameDay(date, selectedDates[1])
               || dateBetweenDatesRange;
         }
         break;
@@ -243,7 +243,7 @@ class CalendarroState extends State<Calendarro> {
   void toggleDateSelection(DateTime date) {
     setState(() {
       for (var i = selectedDates.length - 1; i >= 0; i--) {
-        if (DateUtils.isSameDay(selectedDates[i], date)) {
+        if (CalendarroDateUtils.isSameDay(selectedDates[i], date)) {
           selectedDates.removeAt(i);
           return;
         }
@@ -301,18 +301,18 @@ class CalendarroState extends State<Calendarro> {
       if (pagesCount <= 1) {
         pageEndDate = widget.endDate;
       } else {
-        var lastDayOfMonth = DateUtils.getLastDayOfMonth(widget.startDate);
+        var lastDayOfMonth = CalendarroDateUtils.getLastDayOfMonth(widget.startDate);
         pageEndDate = lastDayOfMonth;
       }
     } else if (pagePosition == pagesCount - 1) {
-      pageStartDate = DateUtils.getFirstDayOfMonth(widget.endDate);
+      pageStartDate = CalendarroDateUtils.getFirstDayOfMonth(widget.endDate);
       pageEndDate = widget.endDate;
     } else {
-      DateTime firstDateOfCurrentMonth = DateUtils.addMonths(
+      DateTime firstDateOfCurrentMonth = CalendarroDateUtils.addMonths(
           widget.startDate,
           pagePosition);
       pageStartDate = firstDateOfCurrentMonth;
-      pageEndDate = DateUtils.getLastDayOfMonth(firstDateOfCurrentMonth);
+      pageEndDate = CalendarroDateUtils.getLastDayOfMonth(firstDateOfCurrentMonth);
     }
 
     return DateRange(pageStartDate, pageEndDate);
@@ -325,15 +325,15 @@ class CalendarroState extends State<Calendarro> {
     if (pagePosition == 0) {
       pageStartDate = widget.startDate;
       pageEndDate =
-          DateUtils.addDaysToDate(widget.startDate, 6 - widget.startDayOffset);
+          CalendarroDateUtils.addDaysToDate(widget.startDate, 6 - widget.startDayOffset);
     } else if (pagePosition == pagesCount - 1) {
-      pageStartDate = DateUtils.addDaysToDate(
+      pageStartDate = CalendarroDateUtils.addDaysToDate(
           widget.startDate, 7 * pagePosition - widget.startDayOffset);
       pageEndDate = widget.endDate;
     } else {
-      pageStartDate = DateUtils.addDaysToDate(
+      pageStartDate = CalendarroDateUtils.addDaysToDate(
           widget.startDate, 7 * pagePosition - widget.startDayOffset);
-      pageEndDate = DateUtils.addDaysToDate(
+      pageEndDate = CalendarroDateUtils.addDaysToDate(
           widget.startDate, 7 * pagePosition + 6 - widget.startDayOffset);
     }
 
@@ -364,7 +364,7 @@ class CalendarroState extends State<Calendarro> {
 
   void _setMultiSelectedDate(DateTime date) {
     final alreadyExistingDate = selectedDates.firstWhere((currentDate) =>
-        DateUtils.isSameDay(currentDate, date),
+        CalendarroDateUtils.isSameDay(currentDate, date),
         orElse: () => null
     );
 

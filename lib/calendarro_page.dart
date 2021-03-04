@@ -35,7 +35,7 @@ class CalendarroPage extends StatelessWidget {
     List<Widget> rows = [];
     rows.add(weekdayLabelsRow);
 
-    DateTime rowLastDayDate = DateUtils.addDaysToDate(pageStartDate, 6 - startDayOffset);
+    DateTime rowLastDayDate = CalendarroDateUtils.addDaysToDate(pageStartDate, 6 - startDayOffset);
 
     if (pageEndDate.isAfter(rowLastDayDate)) {
       rows.add(Row(
@@ -43,13 +43,13 @@ class CalendarroPage extends StatelessWidget {
       );
 
       for (var i = 1; i < MAX_ROWS_COUNT; i++) {
-        DateTime nextRowFirstDayDate = DateUtils.addDaysToDate(pageStartDate, 7 * i - startDayOffset);
+        DateTime nextRowFirstDayDate = CalendarroDateUtils.addDaysToDate(pageStartDate, 7 * i - startDayOffset);
 
         if (nextRowFirstDayDate.isAfter(pageEndDate)) {
           break;
         }
 
-        DateTime nextRowLastDayDate = DateUtils.addDaysToDate(pageStartDate, 7 * i - startDayOffset + 6);
+        DateTime nextRowLastDayDate = CalendarroDateUtils.addDaysToDate(pageStartDate, 7 * i - startDayOffset + 6);
 
 
         if (nextRowLastDayDate.isAfter(pageEndDate)) {
